@@ -1,6 +1,15 @@
 import '../style/Grid.css';
 import { useEffect, useRef, useMemo, useCallback } from 'react';
 import seedrandom from 'seedrandom';
+import { SpotifyApi } from '@spotify/web-api-ts-sdk';
+
+//const sdk = SpotifyApi.withUserAuthorization("7b1532e31e4f4ab28f471527aa4ab785", "https://localhost:3000");
+const sdk = SpotifyApi.withClientCredentials("7b1532e31e4f4ab28f471527aa4ab785", "4099a973c7084a31972ed8a44c878796");
+
+const items = await sdk.search("genre:hip-hop", ["artist"], "US", 3);
+
+const artists = items.artists.items;
+//artistsSort.sort((a, b) => b.followers.total - a.followers.total);
 
 export default function Grid() {
     const availableRow = useMemo(() => [
@@ -72,6 +81,9 @@ export default function Grid() {
             if (row === 0 && col !== 0) {
                 const index = col - 1;
                 child.innerHTML = `${availableRow[randOfDay[index]].name}`
+            } else if (col === 0 && row !== 0){
+                const index = row - 1;
+                child.innerHTML = `<h1>${artists[index].name}</h1> <img src="${artists[index].images[2].url}"/>`
             } else {
                 child.innerHTML = `row : ${row} <br> col : ${col}`
             }
