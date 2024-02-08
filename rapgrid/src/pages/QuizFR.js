@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import QuizCard from '../components/organisms/QuizCard';
@@ -6,7 +6,7 @@ import QuizCard from '../components/organisms/QuizCard';
 export default function QuizFR() {
   const containerRef = useRef(null);
 
-  const [id, setid] = useState(1);
+  const [id, setId] = useState(1);
   const [artistsValue, setArtistsValue] = useState({
     booba: 0,
     sch: 0,
@@ -20,12 +20,8 @@ export default function QuizFR() {
 
     setArtistsValue({ ...artistsValue, [artist]: artistsValue[artist] + 1 })
     setResult(Object.keys(artistsValue).sort(function (a, b) { return artistsValue[b] - artistsValue[a] }));
-    setid(id + 1);
+    setId(id + 1);
   };
-
-  useEffect(() => {
-    console.log(artistsValue);
-  }, [artistsValue])
 
   return (
     <div ref={containerRef}>

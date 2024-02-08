@@ -9,7 +9,7 @@ export default function QuizCard({ id, buttonClick, artist }) {
     <div>
       <div className="block max-w-screen-lg p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         {
-          id < 11 ?
+          id <= 11 ?
               <QuizQuestion
                 id={id}
                 buttonClick={buttonClick}

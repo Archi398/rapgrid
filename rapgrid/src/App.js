@@ -9,7 +9,7 @@ import Grid from './pages/Grid';
 
 function App() {
   return (
-    <div className="pt-24 w-full h-full max-w-screen-xl flex flex-wrap items-center justify-center mx-auto">
+    <div className="py-24 w-full h-full max-w-screen-xl flex flex-wrap items-center justify-center mx-auto">
       <Routes>
         <Route path="/" element={<Navigation />}>
           <Route index element={<Home />} />
