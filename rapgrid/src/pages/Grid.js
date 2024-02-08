@@ -73,6 +73,8 @@ export default function Grid() {
         return [randomNumber1, randomNumber2, randomNumber3];
     }, [availableRow]);
 
+
+
     const getRowsOfDay = useCallback(() => {
         const randOfDay = getRandomNumberForDay();
         for (const child of gridRef.current.children) {
@@ -81,7 +83,7 @@ export default function Grid() {
             if (row === 0 && col !== 0) {
                 const index = col - 1;
                 child.innerHTML = `${availableRow[randOfDay[index]].name}`
-            } else if (col === 0 && row !== 0){
+            } else if (col === 0 && row !== 0) {
                 const index = row - 1;
                 child.innerHTML = `<h1>${artists[index].name}</h1> <img src="${artists[index].images[2].url}"/>`
             } else {
