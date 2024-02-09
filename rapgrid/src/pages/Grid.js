@@ -136,7 +136,7 @@ export default function Grid() {
                         break;
                 }
 
-                child.innerHTML = `<div> <h1>${artists[randArtists[index]].name}</h1> <img class="size-32" src="${artists[randArtists[index]].images[2].url}"/> </div>`
+                child.innerHTML = `<h1>${artists[randArtists[index]].name}</h1> <img class="size-16 md:size-32" src="${artists[randArtists[index]].images[2].url}"/>`
             } else {
 
             }
@@ -150,76 +150,76 @@ export default function Grid() {
     return (
         <div className="size-full">
             <div className="grid grid-cols-4 gap-4 text-white" id="grid" ref={gridRef}>
-                <div className="w-40" id="00">
+                <div className="w-24 md:w-40" id="00">
 
                 </div>
-                <div className="w-40 text-center" id="01">
+                <div className="w-24 md:w-40 text-center" id="01">
 
                 </div>
-                <div className="w-40 text-center" id="02">
+                <div className="w-24 md:w-40 text-center" id="02">
 
                 </div>
-                <div className="w-40 text-center" id="03">
+                <div className="w-24 md:w-40 text-center" id="03">
 
                 </div>
-                <div className="size-40 flex justify-center text-center" id="10">
+                <div className="size-24 md:size-40 flex flex flex-col justify-center items-center" id="10">
 
                 </div>
-                <div className="size-40" id="11">
+                <div className="size-24 md:size-40" id="11">
                     <GridButtonModal
                         artistID={artistRow1}
                         categID={categCol1}
                     ></GridButtonModal>
                 </div>
-                <div className="size-40" id="12">
+                <div className="size-24 md:size-40" id="12">
                     <GridButtonModal
                         artistID={artistRow1}
                         categID={categCol2}
                     ></GridButtonModal>
                 </div>
-                <div className="size-40" id="13">
+                <div className="size-24 md:size-40" id="13">
                     <GridButtonModal
                         artistID={artistRow1}
                         categID={categCol3}
                     ></GridButtonModal>
                 </div>
-                <div className="size-40 flex justify-center text-center" id="20">
+                <div className="size-24 md:size-40 flex flex flex-col justify-center items-center" id="20">
 
                 </div>
-                <div className="size-40" id="21">
+                <div className="size-24 md:size-40" id="21">
                     <GridButtonModal
                         artistID={artistRow2}
                         categID={categCol1}
                     ></GridButtonModal>
                 </div>
-                <div className="size-40" id="22">
+                <div className="size-24 md:size-40" id="22">
                     <GridButtonModal
                         artistID={artistRow2}
                         categID={categCol2}
                     ></GridButtonModal>
                 </div>
-                <div className="size-40" id="23">
+                <div className="size-24 md:size-40" id="23">
                     <GridButtonModal
                         artistID={artistRow2}
                         categID={categCol3}
                     ></GridButtonModal>
                 </div>
-                <div className="size-40 flex justify-center text-center" id="30">
+                <div className="size-24 md:size-40 flex flex flex-col justify-center items-center" id="30">
 
                 </div>
-                <div className="size-40" id="31">
+                <div className="size-24 md:size-40" id="31">
                     <GridButtonModal
                         artistID={artistRow3}
                         categID={categCol1}
                     ></GridButtonModal>
                 </div>
-                <div className="size-40" id="32">
+                <div className="size-24 md:size-40" id="32">
                     <GridButtonModal
                         artistID={artistRow3}
                         categID={categCol2}
                     ></GridButtonModal>
                 </div>
-                <div className="size-40" id="33">
+                <div className="size-24 md:size-40" id="33">
                     <GridButtonModal
                         artistID={artistRow3}
                         categID={categCol3}

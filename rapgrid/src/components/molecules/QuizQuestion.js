@@ -567,11 +567,11 @@ export default function QuizQuestion({ id, buttonClick }) {
   return (
     <div>
       <QuizTitle>{currentQuestion.id}. {currentQuestion.text}</QuizTitle>
-      <div className="flex">
-        <div className="flex flex-col w-1/2">
+      <div className="md:flex">
+        <div className="flex flex-col md:w-1/2">
           <QuizImg src={currentQuestion.img} alt={""} />
         </div>
-        <div className="flex flex-col w-1/2 ml-16 justify-center">
+        <div className="flex flex-col md:w-1/2 md:ml-16 mt-8 md:mt-0 justify-center">
           {
             answers.filter((answer) => answer.group === id).map((answer, index) => {
               return (

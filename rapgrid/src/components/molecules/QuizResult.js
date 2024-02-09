@@ -50,8 +50,8 @@ export default function QuizResult({ id, artistr }) {
       <div className="flex justify-center mb-4">
         <QuizTitle>{currentArtists.title}</QuizTitle>
       </div>
-      <div className="flex">
-        <div className="flex flex-col w-1/2">
+      <div className="md:flex">
+        <div className="flex flex-col md:w-1/2">
           <QuizImg src={currentArtists.img} alt={""} />
         </div>
         <ConfettiExplosion
@@ -60,7 +60,7 @@ export default function QuizResult({ id, artistr }) {
           particleCount={250}
           width={1600}
         />
-        <div className="flex flex-col w-1/2 ml-16 justify-center">
+        <div className="flex flex-col md:w-1/2 md:ml-16 mt-8 md:mt-0 justify-center">
           <QuizText>{currentArtists.text}</QuizText>
         </div>
       </div>

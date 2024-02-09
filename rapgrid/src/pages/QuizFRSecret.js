@@ -17,11 +17,11 @@ export default function QuizFRSecret() {
             return (
               <div className="block mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <QuizTitle key={question.id}>{question.id}. {question.text}</QuizTitle>
-                <div className="flex">
-                  <div className="flex flex-col w-1/2">
+                <div className="md:flex">
+                  <div className="flex flex-col md:w-1/2">
                     <QuizImg key={question.id} src={question.img} alt={""} />
                   </div>
-                  <div className="flex flex-col w-1/2 ml-16 justify-center">
+                  <div className="flex flex-col md:w-1/2 md:ml-16 mt-8 md:mt-0 justify-center">
                     <Accordion collapseAll>
                       {
                         answers.filter((answer) => answer.group === question.id).map((answer, index) => {
