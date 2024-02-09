@@ -48,8 +48,21 @@ export default function GridButtonModal({ artistID, categID }) {
     }
   };
 
+  const fetchDataAlbum = async (id) => {
+    try {
+      const album = await sdk.albums.tracks(id, "US", 50);
+      console.log('fetchDataAlbum', album); 
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    } finally {
+      //setLoading(false);
+    }
+  };
+
   // Handle user selection
   const handleSelectResult = (result) => {
+    //fetchDataAlbum(result.id);
+
     let checkCol = false;
     let checkRow = result.artists.some(artist => artist.id === artistID);
 
