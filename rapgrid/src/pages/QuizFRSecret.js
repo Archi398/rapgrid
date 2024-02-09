@@ -36,7 +36,7 @@ export default function QuizFRSecret() {
                                   Song : {answer.source.song}
                                 </p>
                                 <p className="mb-2 text-gray-500 dark:text-gray-400">
-                                  Lyrics : {answer.source.lyrics}
+                                  Lyrics : "{answer.source.lyrics}"
                                 </p>
                                 <p>
                                   <a href={answer.source.link} target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-500 hover:underline">

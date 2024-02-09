@@ -1,4 +1,6 @@
 import React from 'react';
+import ConfettiExplosion from 'react-confetti-explosion';
+
 import QuizImg from '../atoms/QuizImg';
 import QuizTitle from '../atoms/QuizTitle';
 import QuizText from '../atoms/QuizText';
@@ -6,7 +8,6 @@ import imgbooba from '../../img/quizFR/BOOBA.gif';
 import imgsch from '../../img/quizFR/SCH.gif';
 import imgjul from '../../img/quizFR/JUL.gif';
 import imglacrim from '../../img/quizFR/LACRIM.gif';
-
 
 
 export default function QuizResult({ id, artistr }) {
@@ -53,6 +54,12 @@ export default function QuizResult({ id, artistr }) {
         <div className="flex flex-col w-1/2">
           <QuizImg src={currentArtists.img} alt={""} />
         </div>
+        <ConfettiExplosion
+          force={0.8}
+          duration={3000}
+          particleCount={250}
+          width={1600}
+        />
         <div className="flex flex-col w-1/2 ml-16 justify-center">
           <QuizText>{currentArtists.text}</QuizText>
         </div>
