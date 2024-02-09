@@ -107,7 +107,7 @@ export default function GridButtonModal({ artistID, categID }) {
     <>
       <img ref={imgRef} className="invisible" src="" alt="" />
       <button ref={btnRef} className="h-full w-full text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 font-medium rounded-lg text-sm text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600" onClick={() => setOpenModal(true)}></button>
-      <Modal show={openModal} size="4xl" position="top-center" onClose={() => setOpenModal(false)} initialFocus={textInputRef}>
+      <Modal className="dark bg-opacity-50" show={openModal} size="4xl" position="top-center" onClose={() => setOpenModal(false)} initialFocus={textInputRef}>
         <Modal.Header>Guess the album !</Modal.Header>
         <Modal.Body>
           <div className="space-y-6">
