@@ -12,7 +12,12 @@ export default function GridOptions({ inputSeedRef, setSeed, region, setRegion, 
     <div className="md:absolute md:top-1/4 md:-right-2/3 mt-8 md:mt-0 flex flex-col">
       <h1 className="text-xl text-gray-900 dark:text-white font-bold mb-4">Options :</h1>
       <div>
-        <label htmlFor="input-seed" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Set seed to play with your friends :</label>
+        <div className="mb-2">
+        <label htmlFor="input-seed" className="block text-sm font-medium text-gray-900 dark:text-white">
+          Enter a word to play with your friends : 
+        </label>
+        <span className="text-xs text-gray-500">Enter the same word to get the same grid</span>
+        </div>
         <div className="flex">
           <input ref={inputSeedRef} type="text" id="input-seed" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required />
           <button onClick={setSeed} type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 ml-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Reload</button>
