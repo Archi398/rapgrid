@@ -4,7 +4,7 @@ import { SpotifyApi } from '@spotify/web-api-ts-sdk';
 
 const sdk = SpotifyApi.withClientCredentials("7b1532e31e4f4ab28f471527aa4ab785", "4099a973c7084a31972ed8a44c878796");
 
-export default function GridButtonModal({ artistID, categID }) {
+export default function GridButtonModal({ artistID, categ, isCoverChecked }) {
   const imgRef = useRef(null);
   const btnRef = useRef(null);
 
@@ -50,8 +50,10 @@ export default function GridButtonModal({ artistID, categID }) {
 
   const fetchDataAlbum = async (id) => {
     try {
-      const album = await sdk.albums.tracks(id, "US", 50);
-      console.log('fetchDataAlbum', album); 
+      const album = await sdk.albums.get(id, "US", 50);
+      const tracks = await sdk.albums.tracks(id, "US", 50);
+      console.log('fetchDataAlbum => album', album); 
+      console.log('fetchDataAlbum => tracks', tracks); 
     } catch (error) {
       console.error('Error fetching search results:', error);
     } finally {
@@ -63,33 +65,8 @@ export default function GridButtonModal({ artistID, categID }) {
   const handleSelectResult = (result) => {
     //fetchDataAlbum(result.id);
 
-    let checkCol = false;
+    let checkCol = categ.check(result);
     let checkRow = result.artists.some(artist => artist.id === artistID);
-
-    switch (categID) {
-      case 1:
-        checkCol = parseInt(result.release_date.split('-')[0]) >= 2006 && parseInt(result.release_date.split('-')[0]) <= 2024;
-        break;
-      case 2:
-        checkCol = parseInt(result.release_date.split('-')[0]) >= 1991 && parseInt(result.release_date.split('-')[0]) <= 2005;
-        break;
-      case 3:
-        checkCol = "aeiouy".includes(result.name.charAt(0).toLowerCase());
-        break;
-      case 4:
-        let patternThe = /^[Tt][Hh][Ee] [A-Za-z]+$/;
-        let oneWord = /^[A-Za-z]+$/;
-        checkCol = patternThe.test(result.name) || oneWord.test(result.name);
-        break;
-      case 5:
-        checkCol = result.total_tracks > 16;
-        break;
-      case 6:
-        checkCol = result.total_tracks <= 16;
-        break;
-      default:
-        break;
-    }
 
     if (checkCol && checkRow) {
       imgRef.current.classList.remove("invisible");
@@ -133,7 +110,7 @@ export default function GridButtonModal({ artistID, categID }) {
                         className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 p-2"
                       >
                         <div className="flex items-center">
-                          <img className="h-10 max-w-lg rounded-lg mr-2" src={result.img} alt={result.name} />
+                          {isCoverChecked && <img className="h-10 max-w-lg rounded-lg mr-2" src={result.img} alt={result.name} />}
                           {result.name}
                         </div>
                       </li>
