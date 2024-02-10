@@ -174,27 +174,47 @@ export default function Grid() {
   const initRows = useCallback(async (seed) => {
     const randCateg = getRandomNumber(categories, seed);
     let randArtists = getRandomNumber(artists, seed);
+    let hasDuplicates;
 
     setcategCol1(categories[randCateg[0]]);
     setcategCol2(categories[randCateg[1]]);
     setcategCol3(categories[randCateg[2]]);
 
-    if (!await checkRowByCol(artists[randArtists[0]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]])) {
-      do {
-        randArtists[0] = randArtists[0] + 1;
-      } while (!await checkRowByCol(artists[randArtists[0]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]));
-    }
+    try {
+      if (!await checkRowByCol(artists[randArtists[0]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]])) {
+        do {
+          hasDuplicates = new Set(randArtists).size !== randArtists.length;
+          
+          randArtists[0] = randArtists[0] + 1;
+          if (randArtists[0] >= artists.length) {
+            randArtists[0] = 0;
+          }
+        } while (!await checkRowByCol(artists[randArtists[0]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]) && hasDuplicates);
+      }
 
-    if (!await checkRowByCol(artists[randArtists[1]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]])) {
-      do {
-        randArtists[1] = randArtists[1] + 1;
-      } while (!await checkRowByCol(artists[randArtists[1]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]));
-    }
+      if (!await checkRowByCol(artists[randArtists[1]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]])) {
+        do {
+          hasDuplicates = new Set(randArtists).size !== randArtists.length;
 
-    if (!await checkRowByCol(artists[randArtists[2]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]])) {
-      do {
-        randArtists[2] = randArtists[2] + 1;
-      } while (!await checkRowByCol(artists[randArtists[2]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]));
+          randArtists[1] = randArtists[1] + 1;
+          if (randArtists[1] >= artists.length) {
+            randArtists[1] = 0;
+          }
+        } while (!await checkRowByCol(artists[randArtists[1]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]) && hasDuplicates);
+      }
+
+      if (!await checkRowByCol(artists[randArtists[2]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]])) {
+        do {
+          hasDuplicates = new Set(randArtists).size !== randArtists.length;
+
+          randArtists[2] = randArtists[2] + 1;
+          if (randArtists[2] >= artists.length) {
+            randArtists[2] = 0;
+          }
+        } while (!await checkRowByCol(artists[randArtists[2]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]) && hasDuplicates);
+      }
+    } catch (error) {
+      console.error("Invalid randArtists", error);
     }
 
     setartistRow1(artists[randArtists[0]].id);
