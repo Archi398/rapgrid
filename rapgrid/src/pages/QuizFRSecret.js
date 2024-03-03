@@ -15,7 +15,7 @@ export default function QuizFRSecret() {
         {
           questions.map((question, index) => {
             return (
-              <div className="block mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+              <div key={index} className="block mb-2 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <QuizTitle key={question.id}>{question.id}. {question.text}</QuizTitle>
                 <div className="md:flex">
                   <div className="flex flex-col md:w-1/2">
@@ -26,21 +26,21 @@ export default function QuizFRSecret() {
                       {
                         answers.filter((answer) => answer.group === question.id).map((answer, index) => {
                           return (
-                            <Accordion.Panel>
-                              <Accordion.Title className="focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800">{answer.text}</Accordion.Title>
+                            <Accordion.Panel key={index}>
+                              <Accordion.Title className="focus:ring-2 focus:ring-green-200 dark:focus:ring-green-800">{answer.text}</Accordion.Title>
                               <Accordion.Content>
                                 <p className="mb-2 text-gray-500 dark:text-gray-400">
-                                  Artist : {answer.artist}
+                                  Artiste : {answer.artist}
                                 </p>
                                 <p className="mb-2 text-gray-500 dark:text-gray-400">
-                                  Song : {answer.source.song}
+                                  Chanson : {answer.source.song}
                                 </p>
                                 <p className="mb-2 text-gray-500 dark:text-gray-400">
-                                  Lyrics : "{answer.source.lyrics}"
+                                  Paroles : "{answer.source.lyrics}"
                                 </p>
                                 <p>
                                   <a href={answer.source.link} target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-500 hover:underline">
-                                    Learn more on Genius
+                                    En savoir plus sur Genius
                                   </a>
                                 </p>
                               </Accordion.Content>

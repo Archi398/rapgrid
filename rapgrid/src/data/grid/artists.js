@@ -10930,69 +10930,6 @@ export const artistFR = [
   {
     "followers": {
       "href": null,
-      "total": 551083
-    },
-    "genres": [
-      "french hip hop",
-      "pop urbaine",
-      "rap francais"
-    ],
-    "id": "2yJ6lsLqG06r9bckSTQRt4",
-    "images": [
-      {
-        "height": 640,
-        "url": "https://i.scdn.co/image/ab6761610000e5eb7376d3aff0707c399c0cd4ff",
-        "width": 640
-      },
-      {
-        "height": 320,
-        "url": "https://i.scdn.co/image/ab676161000051747376d3aff0707c399c0cd4ff",
-        "width": 320
-      },
-      {
-        "height": 160,
-        "url": "https://i.scdn.co/image/ab6761610000f1787376d3aff0707c399c0cd4ff",
-        "width": 160
-      }
-    ],
-    "name": "Zkr",
-    "popularity": 65,
-    "type": "artist",
-  },
-  {
-    "followers": {
-      "href": null,
-      "total": 2053751
-    },
-    "genres": [
-      "french hip hop",
-      "rap conscient"
-    ],
-    "id": "1Yfe3ONJlioHys7jwHdfVm",
-    "images": [
-      {
-        "height": 640,
-        "url": "https://i.scdn.co/image/ab6761610000e5eb08a91c70b5af4a856d9ea2d0",
-        "width": 640
-      },
-      {
-        "height": 320,
-        "url": "https://i.scdn.co/image/ab6761610000517408a91c70b5af4a856d9ea2d0",
-        "width": 320
-      },
-      {
-        "height": 160,
-        "url": "https://i.scdn.co/image/ab6761610000f17808a91c70b5af4a856d9ea2d0",
-        "width": 160
-      }
-    ],
-    "name": "Lomepal",
-    "popularity": 64,
-    "type": "artist",
-  },
-  {
-    "followers": {
-      "href": null,
       "total": 333965
     },
     "genres": [
@@ -12053,37 +11990,6 @@ export const artistFR = [
     ],
     "name": "Népal",
     "popularity": 58,
-    "type": "artist",
-  },
-  {
-    "followers": {
-      "href": null,
-      "total": 823368
-    },
-    "genres": [
-      "belgian hip hop",
-      "french hip hop"
-    ],
-    "id": "2pHk4wAmL7ofTAuvCIUWtv",
-    "images": [
-      {
-        "height": 640,
-        "url": "https://i.scdn.co/image/ab6761610000e5eb243f1b8756f0bbd0fcdb7260",
-        "width": 640
-      },
-      {
-        "height": 320,
-        "url": "https://i.scdn.co/image/ab67616100005174243f1b8756f0bbd0fcdb7260",
-        "width": 320
-      },
-      {
-        "height": 160,
-        "url": "https://i.scdn.co/image/ab6761610000f178243f1b8756f0bbd0fcdb7260",
-        "width": 160
-      }
-    ],
-    "name": "Roméo Elvis",
-    "popularity": 57,
     "type": "artist",
   },
   {

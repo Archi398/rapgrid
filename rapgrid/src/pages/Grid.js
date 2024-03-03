@@ -1,84 +1,103 @@
 import '../style/Grid.css';
-import { useEffect, useRef, useMemo, useCallback, useState } from 'react';
+import { useEffect, useRef, useMemo, useCallback, useState, useContext } from 'react';
 import seedrandom from 'seedrandom';
-import { SpotifyApi } from '@spotify/web-api-ts-sdk';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import GridButtonModal from '../components/molecules/GridButtonModal';
 import GridOptions from '../components/organisms/GridOptions';
+import GridLoading from '../components/atoms/GridLoading';
+import GridFinish from '../components/organisms/GridFinish';
 
 import { artistWorld, artistUK, artistFR, artistRockWorld } from '../data/grid/artists';
+import { GlobalContext } from "../App";
 
-//const sdk = SpotifyApi.withUserAuthorization("7b1532e31e4f4ab28f471527aa4ab785", "https://localhost:3000");
+export default function Grid({ isDaily, isPersonal }) {
 
-const sdk = SpotifyApi.withClientCredentials("7b1532e31e4f4ab28f471527aa4ab785", "4099a973c7084a31972ed8a44c878796");
+  const { sdkGlobal, currentUserTopArtists } = useContext(GlobalContext);
 
-// const items = await sdk.search("genre:rock", ["artist"], "", 50);
-// const items2 = await sdk.search("genre:rock", ["artist"], "", 50, 50);
-// const items3 = await sdk.search("genre:rock", ["artist"], "", 50, 100);
-
-// const artistsaze = items.artists.items.concat(items2.artists.items,items3.artists.items);
-// console.log(artistsaze);
-// console.log(artistsaze.filter((artist) => artist.followers.total > 3000000));
-
-//artistsSort.sort((a, b) => b.followers.total - a.followers.total);
-
-export default function Grid() {
   const categories = useMemo(() => [
     {
       id: 1,
-      name: "Album between 2006 and 2024",
+      name: "Album entre 2006 et 2024",
       check: function (album) {
         return parseInt(album.release_date.split('-')[0]) >= 2006 && parseInt(album.release_date.split('-')[0]) <= 2024;
       },
     },
     {
       id: 2,
-      name: "Album between 1991 and 2005",
+      name: "Album entre 1991 et 2005",
       check: function (album) {
         return parseInt(album.release_date.split('-')[0]) >= 1991 && parseInt(album.release_date.split('-')[0]) <= 2005;
       },
     },
     {
       id: 3,
-      name: "Album beginning with a vowel",
+      name: "Album commençant par une voyelle",
       check: function (album) {
         return "aeiouy".includes(album.name.charAt(0).toLowerCase());
       },
     },
     {
       id: 4,
-      name: "One word title (Ignore 'the')",
+      name: "Titre en un mot",
       check: function (album) {
-        let patternThe = /^[Tt][Hh][Ee] [A-Za-z]+$/;
-        let oneWord = /^[A-Za-z]+$/;
-        return patternThe.test(album.name) || oneWord.test(album.name);
+        const oneWordRegex = /^[A-Za-z]+$/;
+        return oneWordRegex.test(album.name);
       },
     },
     {
       id: 5,
-      name: "Album with more than 16 tracks",
+      name: "Album de plus de 16 titres",
       check: function (album) {
         return album.total_tracks > 16;;
       },
     },
     {
       id: 6,
-      name: "Album with 16 tracks or less",
+      name: "Album de 16 titres ou moins",
       check: function (album) {
         return album.total_tracks <= 16;;
+      },
+    },
+    {
+      id: 7,
+      name: "Album sans featuring",
+      check: function (album) {
+        let flag = false;
+        album.tracks.items.forEach((item) => {
+          if (item.artists.length > 1) {
+            flag = true;
+          }
+        });
+        return flag;
+      },
+    },
+    {
+      id: 8,
+      name: "Album dont le nom à au moins 3 mots",
+      check: function (album) {
+        const nameWithoutParentheses = album.name.replace(/\(.*?\)/g, '');
+        const words = nameWithoutParentheses.trim().split(/\s+/);
+        return words.length >= 3;
+      },
+    },
+    {
+      id: 9,
+      name: "Album avec un morceau de plus de 5 min",
+      check: function (album) {
+        let flag = false;
+        album.tracks.items.forEach((item) => {
+          if (item.duration_ms > 300000) {
+            flag = true;
+          }
+        });
+        return flag;
       },
     },
     // {
     //     id: 7,
     //     name: "Album featuring Kanye West"
-    // },
-    // {
-    //     id: 8,
-    //     name: "Mixtape"
-    // },
-    // {
-    //     id: 9,
-    //     name: "Top 10 Billboard album"
     // },
   ], []);
   const gridRef = useRef(null);
@@ -92,16 +111,56 @@ export default function Grid() {
   const [categCol1, setcategCol1] = useState({});
   const [categCol2, setcategCol2] = useState({});
   const [categCol3, setcategCol3] = useState({});
+  const [anwsers, setAnwsers] = useState({});
+
+  const gridDiv = [
+    { divID: "00", isButton: false, classlist: "w-16 md:w-26" },
+    { divID: "01", isButton: false, classlist: "w-16 md:w-36 text-center flex items-center justify-center" },
+    { divID: "02", isButton: false, classlist: "w-16 md:w-36 text-center flex items-center justify-center" },
+    { divID: "03", isButton: false, classlist: "w-16 md:w-36 text-center flex items-center justify-center" },
+    { divID: "10", isButton: false, classlist: "size-16 md:size-36 flex flex flex-col items-center" },
+    { divID: "11", isButton: true, artistID: artistRow1, categ: categCol1, classlist: "size-16 md:size-36" },
+    { divID: "12", isButton: true, artistID: artistRow1, categ: categCol2, classlist: "size-16 md:size-36" },
+    { divID: "13", isButton: true, artistID: artistRow1, categ: categCol3, classlist: "size-16 md:size-36" },
+    { divID: "20", isButton: false, classlist: "size-16 md:size-36 flex flex flex-col items-center" },
+    { divID: "21", isButton: true, artistID: artistRow2, categ: categCol1, classlist: "size-16 md:size-36" },
+    { divID: "22", isButton: true, artistID: artistRow2, categ: categCol2, classlist: "size-16 md:size-36" },
+    { divID: "23", isButton: true, artistID: artistRow2, categ: categCol3, classlist: "size-16 md:size-36" },
+    { divID: "30", isButton: false, classlist: "size-16 md:size-36 flex flex flex-col items-center" },
+    { divID: "31", isButton: true, artistID: artistRow3, categ: categCol1, classlist: "size-16 md:size-36" },
+    { divID: "32", isButton: true, artistID: artistRow3, categ: categCol2, classlist: "size-16 md:size-36" },
+    { divID: "33", isButton: true, artistID: artistRow3, categ: categCol3, classlist: "size-16 md:size-36" },
+  ];
 
   const [artists, setArtists] = useState(null);
-  const [region, setRegion] = useState('world');
-  const [isCoverChecked, setIsCoverChecked] = useState(false);
+  const [region, setRegion] = useState(isPersonal ? 'personal' : 'FR');
+  const [isCoverChecked, setIsCoverChecked] = useState(true);
 
-  const fetchDataArtist = async (id) => {
+  // if daily grid
+  const today = new Date();
+  const todaySeed = ((today.getDate() < 10) ? ("0" + today.getDate()) : today.getDate()) + '/' + ((today.getMonth() + 1 < 10) ? ("0" + (today.getMonth() + 1)) : (today.getMonth() + 1)) + '/' + today.getFullYear();
+  if (!localStorage.getItem(`lives_${todaySeed}`)) {
+    localStorage.setItem(`lives_${todaySeed}`, 11)
+  }
+  if (!localStorage.getItem(`result_correct_${todaySeed}_all`)) {
+    localStorage.setItem(`result_correct_${todaySeed}_all`, 0)
+  }
+  const [lives, setLives] = useState(localStorage.getItem(`lives_${todaySeed}`));
+  if (!localStorage.getItem(`lives_${todaySeed}`)) {
+    localStorage.setItem(`lives_${todaySeed}`, 11)
+  }
+
+  const fetchDataAlbumByArtist = async (id) => {
     try {
       setLoading(true);
-      const artistAlbums = await sdk.artists.albums(id, "album", "", 50)
-      return artistAlbums.items;
+      const artistAlbums = await sdkGlobal.artists.albums(id, "album", "", 50);
+      let albumsPromises = [];
+      artistAlbums.items.forEach((item) => {
+        const albumPromise = sdkGlobal.albums.get(item.id, "", 50);
+        albumsPromises.push(albumPromise);
+      });
+      const albums = await Promise.all(albumsPromises);
+      return albums;
     } catch (error) {
       console.error('Error fetching search results:', error);
     } finally {
@@ -109,47 +168,33 @@ export default function Grid() {
     }
   };
 
-  const checkRowByCol = async (artistID, categ1, categ2, categ3) => {
-    const arrayArtistAlbums = await fetchDataArtist(artistID);
+  const checkRowByCol = async (artistID, artistIndex, categ1, categ2, categ3) => {
+    const arrayArtistAlbums = await fetchDataAlbumByArtist(artistID);
 
-    let flag1 = false;
-    let flag2 = false;
-    let flag3 = false;
+    let flags = [false, false, false];
+    const categs = [categ1, categ2, categ3];
+
+    const updatedAnwsers = { ...anwsers };
 
     arrayArtistAlbums.forEach(album => {
-      if (categ1.check(album)) {
-        flag1 = true;
-      }
-      if (categ2.check(album)) {
-        flag2 = true;
-      }
-      if (categ3.check(album)) {
-        flag3 = true;
-      }
+      categs.forEach((categ, index) => {
+        if (categ.check(album)) {
+          const key = `${artistIndex + 1}${index + 1}`;
+          if (!updatedAnwsers[key]) {
+            updatedAnwsers[key] = [];
+          }
+          updatedAnwsers[key].push({ name: album.name, img: album.images[2].url, date: album.release_date });
+          flags[index] = true;
+        }
+      });
     });
 
-    return (flag1 && flag2 && flag3);
+    if (flags.every((flag) => flag === true)) {
+      setAnwsers(prevState => { return { ...prevState, ...updatedAnwsers } });
+    }
+
+    return flags;
   };
-
-  const getRandomNumberForDay = useCallback(() => {
-    const today = new Date();
-    const seed = today.getFullYear() + '/' + today.getMonth() + '/' + today.getDate();
-    seedrandom(seed, { global: true });
-
-    const categoriesLength = categories.length;
-
-    let randomNumber1 = Math.floor(Math.random() * categoriesLength);
-    let randomNumber2;
-    do {
-      randomNumber2 = Math.floor(Math.random() * categoriesLength);
-    } while (randomNumber2 === randomNumber1);
-    let randomNumber3;
-    do {
-      randomNumber3 = Math.floor(Math.random() * categoriesLength);
-    } while (randomNumber3 === randomNumber1 || randomNumber3 === randomNumber2);
-
-    return [randomNumber1, randomNumber2, randomNumber3];
-  }, [categories]);
 
   const getRandomNumber = useCallback((array, seed) => {
     if (seed) {
@@ -157,65 +202,107 @@ export default function Grid() {
     }
 
     const arrayLength = array.length;
+    const randomIndices = new Set();
 
-    let randomNumber1 = Math.floor(Math.random() * arrayLength);
-    let randomNumber2;
-    do {
-      randomNumber2 = Math.floor(Math.random() * arrayLength);
-    } while (randomNumber2 === randomNumber1);
-    let randomNumber3;
-    do {
-      randomNumber3 = Math.floor(Math.random() * arrayLength);
-    } while (randomNumber3 === randomNumber1 || randomNumber3 === randomNumber2);
+    while (randomIndices.size < 3) {
+      const randomNumber = Math.floor(Math.random() * arrayLength);
+      randomIndices.add(randomNumber);
+    }
 
-    return [randomNumber1, randomNumber2, randomNumber3];
+    return Array.from(randomIndices);
   }, []);
 
   const initRows = useCallback(async (seed) => {
-    const randCateg = getRandomNumber(categories, seed);
+    let randCateg = getRandomNumber(categories, seed);
     let randArtists = getRandomNumber(artists, seed);
-    let hasDuplicates;
+
+    //reset anwsers
+    setAnwsers({});
+
+    const checkAndUpdateRow = async (index) => {
+      const uniqueCateg = new Set(randCateg);
+      const counters = new Array(randCateg.length).fill(0);
+      const maxIterations = 200;
+      let iterationCount = 0;
+
+      while (true) {
+        iterationCount++;
+        if (iterationCount > maxIterations) {
+          console.warn('Maximum iterations reached, breaking loop');
+          break;
+        }
+
+        const flags = await checkRowByCol(artists[randArtists[index]].id, index, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]);
+
+        const indices = flags.reduce((result, flag, index) => {
+          if (flag === false) {
+            result.push(index);
+          }
+          return result;
+        }, []);
+
+
+        const maxIterations2 = 50;
+        let iterationCount2 = 0;
+
+        for (const i of indices) {
+          do {
+            if (iterationCount2++ > maxIterations2) {
+              console.warn('Maximum iterations reached, breaking loop');
+              break;
+            }
+
+            randCateg[i]++;
+            counters[i]++;
+            if (randCateg[i] >= categories.length) {
+              randCateg[i] = 0;
+            }
+            if (counters[i] >= categories.length) {
+              randArtists[index] = (randArtists[index] + 1) % artists.length;
+              counters[i] = 0;
+            }
+
+            uniqueCateg.delete(randCateg[i]);
+          } while (uniqueCateg.has(randCateg[i]));
+          uniqueCateg.add(randCateg[i]);
+        }
+
+        if (flags.every((flag) => flag === true)) {
+          break;
+        }
+      }
+    };
+
+    if (isDaily) {
+      if (localStorage.getItem(`randCateg_${todaySeed}`) !== null && localStorage.getItem(`randArtists_${todaySeed}`) !== null) {
+        randCateg = JSON.parse(localStorage.getItem(`randCateg_${todaySeed}`))
+        randArtists = JSON.parse(localStorage.getItem(`randArtists_${todaySeed}`))
+      } else {
+        try {
+          await Promise.all([
+            checkAndUpdateRow(0),
+            checkAndUpdateRow(1),
+            checkAndUpdateRow(2)
+          ]);
+        } catch (error) {
+          console.error("Invalid checkAndUpdateRow", error);
+        }
+      }
+    } else {
+      try {
+        await Promise.all([
+          checkAndUpdateRow(0),
+          checkAndUpdateRow(1),
+          checkAndUpdateRow(2)
+        ]);
+      } catch (error) {
+        console.error("Invalid checkAndUpdateRow", error);
+      }
+    }
 
     setcategCol1(categories[randCateg[0]]);
     setcategCol2(categories[randCateg[1]]);
     setcategCol3(categories[randCateg[2]]);
-
-    try {
-      if (!await checkRowByCol(artists[randArtists[0]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]])) {
-        do {
-          hasDuplicates = new Set(randArtists).size !== randArtists.length;
-          
-          randArtists[0] = randArtists[0] + 1;
-          if (randArtists[0] >= artists.length) {
-            randArtists[0] = 0;
-          }
-        } while (!await checkRowByCol(artists[randArtists[0]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]) && hasDuplicates);
-      }
-
-      if (!await checkRowByCol(artists[randArtists[1]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]])) {
-        do {
-          hasDuplicates = new Set(randArtists).size !== randArtists.length;
-
-          randArtists[1] = randArtists[1] + 1;
-          if (randArtists[1] >= artists.length) {
-            randArtists[1] = 0;
-          }
-        } while (!await checkRowByCol(artists[randArtists[1]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]) && hasDuplicates);
-      }
-
-      if (!await checkRowByCol(artists[randArtists[2]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]])) {
-        do {
-          hasDuplicates = new Set(randArtists).size !== randArtists.length;
-
-          randArtists[2] = randArtists[2] + 1;
-          if (randArtists[2] >= artists.length) {
-            randArtists[2] = 0;
-          }
-        } while (!await checkRowByCol(artists[randArtists[2]].id, categories[randCateg[0]], categories[randCateg[1]], categories[randCateg[2]]) && hasDuplicates);
-      }
-    } catch (error) {
-      console.error("Invalid randArtists", error);
-    }
 
     setartistRow1(artists[randArtists[0]].id);
     setartistRow2(artists[randArtists[1]].id);
@@ -225,6 +312,11 @@ export default function Grid() {
   }, [categories, getRandomNumber, artists]);
 
   const getRows = useCallback((randCateg, randArtists) => {
+    if (isDaily && (!localStorage.getItem(`randCateg_${todaySeed}`) && !localStorage.getItem(`randArtists_${todaySeed}`))) {
+      localStorage.setItem(`randCateg_${todaySeed}`, JSON.stringify(randCateg))
+      localStorage.setItem(`randArtists_${todaySeed}`, JSON.stringify(randArtists))
+    }
+
     for (const child of gridRef.current.children) {
       const [row, col] = child.id.split('').map(Number);
 
@@ -235,13 +327,53 @@ export default function Grid() {
       } else if (col === 0 && row !== 0) {
         const index = row - 1;
 
-        child.innerHTML = `<span class="text-xs md:text-lg">${artists[randArtists[index]].name}</span> <img class="size-16 md:size-32" src="${artists[randArtists[index]].images[2].url}"/>`
+        child.innerHTML = `<span class="text-xs md:text-base">${artists[randArtists[index]].name}</span> <img class="size-12 md:size-28 rounded" src="${artists[randArtists[index]].images[2].url}"/>`
       } else {
 
       }
     }
     setLoading(false);
-  }, [categories, artists]);
+  }, [isDaily, categories, artists, todaySeed]);
+
+  async function share(event) {
+    const currentElement = event.target;
+
+    const gridResult = {};
+    for (let i = 1; i <= 3; i++) {
+      for (let j = 1; j <= 3; j++) {
+        gridResult[`${i}${j}`] = "⬜";
+      }
+    }
+
+    for (const key in localStorage) {
+      if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
+        if (key.includes(`result_album_id_${todaySeed}_`)) {
+          const index = key.split('_')[4];
+          gridResult[index] = "🟩";
+        }
+      }
+    }
+
+    const correctCount = localStorage.getItem(`result_correct_${todaySeed}_all`) || '0';
+    const textToCopy = `Rap grid For ${todaySeed}:
+
+${correctCount}/9 Correct
+
+${gridResult["11"]}${gridResult["12"]}${gridResult["13"]}
+${gridResult["21"]}${gridResult["22"]}${gridResult["23"]}
+${gridResult["31"]}${gridResult["32"]}${gridResult["33"]}
+
+https://rapgrid.vercel.app/gridrap/day`;
+
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      currentElement.innerHTML = "Copié !";
+      return true;
+    } catch (error) {
+      console.error('Error copying text to clipboard:', error);
+      return false;
+    }
+  }
 
   const setSeed = () => {
     initRows(inputSeedRef.current.value)
@@ -256,143 +388,103 @@ export default function Grid() {
         setArtists(artistUK.filter((artist) => artist.followers.total > 500000));
         break;
       case 'FR':
-        setArtists(artistFR.filter((artist) => artist.followers.total > 1000000));
+        setArtists(artistFR.filter((artist) => artist.followers.total > 450000));
         break;
       case 'rockWorld':
         setArtists(artistRockWorld.filter((artist) => artist.followers.total > 3000000));
+        break;
+      case 'personal':
+        setArtists(currentUserTopArtists);
         break;
       default:
         setArtists(artistWorld.filter((artist) => artist.followers.total > 3000000));
         break;
     }
-  }, [region]);
+  }, [region, currentUserTopArtists]);
 
   useEffect(() => {
     if (artists !== null) {
-      initRows();
+      const initSeed = isDaily ? todaySeed : '';
+      initRows(initSeed);
     }
-  }, [initRows, artists]);
+  }, [initRows, artists, isDaily, todaySeed]);
+
+  // remove yesterday localStorage
+  useEffect(() => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdaySeed = yesterday.getDate() + '/' + ((yesterday.getMonth() + 1 < 10) ? ("0" + (yesterday.getMonth() + 1)) : (yesterday.getMonth() + 1)) + '/' + yesterday.getFullYear();
+
+    Object.keys(localStorage).forEach(key => {
+      if (key.includes(yesterdaySeed)) {
+        localStorage.removeItem(key);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(anwsers).length === 9) {
+      if (isDaily) {
+        localStorage.setItem(`anwsers_${todaySeed}`, JSON.stringify(anwsers));
+      }
+      console.log(anwsers);
+    }
+  }, [isDaily, todaySeed, anwsers]);
 
   return (
     <div className="size-full relative">
-      <div className={loading ? '' : 'hidden'}>
-        <div className="border border-blue-300 shadow rounded-md p-4">
-          <div className="animate-pulse grid grid-cols-4 gap-4 text-white">
-            <div className=""></div>
-            <div className="w-20 h-6 md:w-40 md:h-12 bg-slate-700 rounded-md"></div>
-            <div className="w-20 h-6 md:w-40 md:h-12 bg-slate-700 rounded-md"></div>
-            <div className="w-20 h-6 md:w-40 md:h-12 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-            <div className="size-20 md:size-40 bg-slate-700 rounded-md"></div>
-          </div>
-        </div>
-      </div>
-      <div className={loading ? 'hidden' : ''}>
+      <GridLoading loading={loading ? '' : 'hidden'}></GridLoading>
+      <div className={`flex flex-col ${loading ? 'hidden' : ''}`}>
         <div className="grid grid-cols-4 gap-4 text-white" id="grid" ref={gridRef}>
-          <div className="w-20 md:w-40" id="00">
-
-          </div>
-          <div className="w-20 md:w-40 text-center" id="01">
-
-          </div>
-          <div className="w-20 md:w-40 text-center" id="02">
-
-          </div>
-          <div className="w-20 md:w-40 text-center" id="03">
-
-          </div>
-          <div className="size-20 md:size-40 flex flex flex-col justify-center items-center" id="10">
-
-          </div>
-          <div className="size-20 md:size-40" id="11">
-            <GridButtonModal
-              artistID={artistRow1}
-              categ={categCol1}
-              isCoverChecked={isCoverChecked}
-            ></GridButtonModal>
-          </div>
-          <div className="size-20 md:size-40" id="12">
-            <GridButtonModal
-              artistID={artistRow1}
-              categ={categCol2}
-              isCoverChecked={isCoverChecked}
-            ></GridButtonModal>
-          </div>
-          <div className="size-20 md:size-40" id="13">
-            <GridButtonModal
-              artistID={artistRow1}
-              categ={categCol3}
-              isCoverChecked={isCoverChecked}
-            ></GridButtonModal>
-          </div>
-          <div className="size-20 md:size-40 flex flex flex-col justify-center items-center" id="20">
-
-          </div>
-          <div className="size-20 md:size-40" id="21">
-            <GridButtonModal
-              artistID={artistRow2}
-              categ={categCol1}
-              isCoverChecked={isCoverChecked}
-            ></GridButtonModal>
-          </div>
-          <div className="size-20 md:size-40" id="22">
-            <GridButtonModal
-              artistID={artistRow2}
-              categ={categCol2}
-              isCoverChecked={isCoverChecked}
-            ></GridButtonModal>
-          </div>
-          <div className="size-20 md:size-40" id="23">
-            <GridButtonModal
-              artistID={artistRow2}
-              categ={categCol3}
-              isCoverChecked={isCoverChecked}
-            ></GridButtonModal>
-          </div>
-          <div className="size-20 md:size-40 flex flex flex-col justify-center items-center" id="30">
-
-          </div>
-          <div className="size-20 md:size-40" id="31">
-            <GridButtonModal
-              artistID={artistRow3}
-              categ={categCol1}
-              isCoverChecked={isCoverChecked}
-            ></GridButtonModal>
-          </div>
-          <div className="size-20 md:size-40" id="32">
-            <GridButtonModal
-              artistID={artistRow3}
-              categ={categCol2}
-              isCoverChecked={isCoverChecked}
-            ></GridButtonModal>
-          </div>
-          <div className="size-20 md:size-40" id="33">
-            <GridButtonModal
-              artistID={artistRow3}
-              categ={categCol3}
-              isCoverChecked={isCoverChecked}
-            ></GridButtonModal>
-          </div>
+          {gridDiv.map(({ divID, isButton, artistID, categ, classlist }) => (
+            isButton ? (
+              <div className={classlist} id={divID} key={divID}>
+                <GridButtonModal
+                  divID={divID}
+                  todaySeed={todaySeed}
+                  setLives={setLives}
+                  isDaily={isDaily}
+                  artistID={artistID}
+                  categ={categ}
+                  isCoverChecked={isCoverChecked}
+                ></GridButtonModal>
+              </div>
+            )
+              : (
+                <div className={classlist} id={divID} key={divID}></div>
+              )
+          ))}
         </div>
-        <GridOptions
-          inputSeedRef={inputSeedRef}
-          setSeed={setSeed}
-          region={region}
-          setRegion={setRegion}
-          isCoverChecked={isCoverChecked}
-          setIsCoverChecked={setIsCoverChecked}
-        ></GridOptions>
+        {
+          isDaily ?
+            <GridFinish
+              lives={lives}
+              setLives={setLives}
+              share={share}
+              todaySeed={todaySeed}
+              isDaily={isDaily}
+              anwsers={anwsers}
+            >
+            </GridFinish>
+            :
+            (
+              isPersonal
+                ?
+                <></>
+                :
+                <GridOptions
+                  inputSeedRef={inputSeedRef}
+                  setSeed={setSeed}
+                  region={region}
+                  setRegion={setRegion}
+                  isCoverChecked={isCoverChecked}
+                  setIsCoverChecked={setIsCoverChecked}
+                ></GridOptions>
+            )
+
+        }
       </div>
+      <ToastContainer />
     </div>
   );
 }
