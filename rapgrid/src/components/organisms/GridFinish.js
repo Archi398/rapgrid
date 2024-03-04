@@ -53,7 +53,7 @@ export default function GridFinish({ lives, setLives, share, todaySeed, isDaily,
                 })}
               </div>
               <div className="flex flex-col justify-center">
-                <h1 className="sm:text-3xl text-xl font-bold	text-center">{localStorage.getItem(`result_correct_${todaySeed}_all`)}/9 Correctes</h1>
+                <h1 className="sm:text-3xl text-xl font-bold	text-center">{lives}/9 Correctes</h1>
                 <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg border-gray-600 text-sm w-full sm:w-auto px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={share}>Partager</button>
               </div>
             </div>

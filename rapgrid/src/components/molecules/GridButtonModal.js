@@ -1,12 +1,12 @@
 import { Label, Modal, TextInput } from 'flowbite-react';
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { SpotifyApi } from '@spotify/web-api-ts-sdk';
+import { useEffect, useRef, useState, useCallback, useContext } from 'react';
+import { GlobalContext } from '../../App';
 import { debounce } from '../../utils/debounce';
 import { toast } from 'react-toastify';
 
-const sdk = SpotifyApi.withClientCredentials("7b1532e31e4f4ab28f471527aa4ab785", "4099a973c7084a31972ed8a44c878796");
-
 export default function GridButtonModal({ divID, todaySeed, setLives, isDaily, artistID, categ, isCoverChecked }) {
+  const { sdkGlobal } = useContext(GlobalContext);
+
   const imgRef = useRef(null);
   const btnRef = useRef(null);
 
@@ -24,7 +24,7 @@ export default function GridButtonModal({ divID, todaySeed, setLives, isDaily, a
 
   const fetchSearchResults = async (term) => {
     try {
-      const items = await sdk.search(`album:${term}`, ["album"], "", 50);
+      const items = await sdkGlobal.search(`album:${term}`, ["album"], "", 50);
 
       let data = [];
       items.albums.items.filter((item) => item.album_type !== "single").forEach(item => {
@@ -57,7 +57,7 @@ export default function GridButtonModal({ divID, todaySeed, setLives, isDaily, a
 
   const fetchDataAlbum = async (id) => {
     try {
-      const album = await sdk.albums.get(id, "", 50);
+      const album = await sdkGlobal.albums.get(id, "", 50);
       return album;
     } catch (error) {
       console.error('Error fetching search results:', error);
@@ -93,8 +93,13 @@ export default function GridButtonModal({ divID, todaySeed, setLives, isDaily, a
       if (isAlbumInRow) toast.warn("Cet album a déjà été trouvé", optionsToast);
     }
 
-    if (isDaily) localStorage.setItem(`lives_${todaySeed}`, localStorage.getItem(`lives_${todaySeed}`) - 1)
-    if (isDaily) setLives(localStorage.getItem(`lives_${todaySeed}`));
+    if (isDaily) {
+      const updatedLives = Number(localStorage.getItem(`lives_${todaySeed}`)) - 1;
+      localStorage.setItem(`lives_${todaySeed}`, updatedLives);
+      setLives(updatedLives);
+    } else {
+      setLives(prev => prev - 1);
+    }
 
     setSearchTerm('');
     setSearchResults([]);

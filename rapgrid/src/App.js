@@ -17,6 +17,11 @@ function App() {
   const [currentUserProfile, setCurrentUserProfile] = useState(null);
   const [currentUserTopArtists, setCurrentUserTopArtists] = useState(null);
 
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('error') === "access_denied") {
+    localStorage.removeItem("spotify-sdk:verifier");
+  }
+
   const spotifyConnectUser = async () => {
     const auth = new AuthorizationCodeWithPKCEStrategy(
       process.env.REACT_APP_SPOTIFY_CLIENT_ID,
@@ -58,7 +63,7 @@ function App() {
     if (localStorage.getItem("spotify-sdk:AuthorizationCodeWithPKCEStrategy:token") || localStorage.getItem("spotify-sdk:verifier")) {
       spotifyConnectUser();
     } else {
-      setSdkGlobal(SpotifyApi.withClientCredentials("7b1532e31e4f4ab28f471527aa4ab785", "4099a973c7084a31972ed8a44c878796"));
+      setSdkGlobal(SpotifyApi.withClientCredentials(process.env.REACT_APP_SPOTIFY_CLIENT_ID, process.env.REACT_APP_SPOTIFY_CLIENT_SECRET));
     }
   }, [setSdkGlobal]);
 

@@ -13,7 +13,6 @@ import { artistWorld, artistUK, artistFR, artistRockWorld } from '../data/grid/a
 import { GlobalContext } from "../App";
 
 export default function Grid({ isDaily, isPersonal }) {
-
   const { sdkGlobal, currentUserTopArtists } = useContext(GlobalContext);
 
   const categories = useMemo(() => [
@@ -65,11 +64,15 @@ export default function Grid({ isDaily, isPersonal }) {
       name: "Album sans featuring",
       check: function (album) {
         let flag = false;
-        album.tracks.items.forEach((item) => {
-          if (item.artists.length > 1) {
-            flag = true;
-          }
-        });
+        if (album.artists.length === 1) {
+          album.tracks.items.forEach((item) => {
+            if (item.artists.length === 1) {
+              flag = true;
+            }
+          });
+        } else {
+          flag = true;
+        }
         return flag;
       },
     },
@@ -163,8 +166,6 @@ export default function Grid({ isDaily, isPersonal }) {
       return albums;
     } catch (error) {
       console.error('Error fetching search results:', error);
-    } finally {
-      //setLoading(false);
     }
   };
 
@@ -183,7 +184,7 @@ export default function Grid({ isDaily, isPersonal }) {
           if (!updatedAnwsers[key]) {
             updatedAnwsers[key] = [];
           }
-          updatedAnwsers[key].push({ name: album.name, img: album.images[2].url, date: album.release_date });
+          updatedAnwsers[key].push({ artistID: artistID, name: album.name, img: album.images[2].url, date: album.release_date });
           flags[index] = true;
         }
       });
@@ -216,12 +217,10 @@ export default function Grid({ isDaily, isPersonal }) {
     let randCateg = getRandomNumber(categories, seed);
     let randArtists = getRandomNumber(artists, seed);
 
-    //reset anwsers
+    // reset anwsers
     setAnwsers({});
 
     const checkAndUpdateRow = async (index) => {
-      const uniqueCateg = new Set(randCateg);
-      const counters = new Array(randCateg.length).fill(0);
       const maxIterations = 200;
       let iterationCount = 0;
 
@@ -241,38 +240,31 @@ export default function Grid({ isDaily, isPersonal }) {
           return result;
         }, []);
 
-
-        const maxIterations2 = 50;
-        let iterationCount2 = 0;
+        let uniqueCateg = new Set(randCateg);
+        let uniqueArtists = new Set(randArtists);
 
         for (const i of indices) {
-          do {
-            if (iterationCount2++ > maxIterations2) {
-              console.warn('Maximum iterations reached, breaking loop');
-              break;
-            }
+          randCateg[i] = (randCateg[i] + 1) % categories.length;
 
-            randCateg[i]++;
-            counters[i]++;
-            if (randCateg[i] >= categories.length) {
-              randCateg[i] = 0;
-            }
-            if (counters[i] >= categories.length) {
+          uniqueCateg = new Set(randCateg);
+
+          if (uniqueCateg.size < randCateg.length) {
+            do {
               randArtists[index] = (randArtists[index] + 1) % artists.length;
-              counters[i] = 0;
-            }
-
-            uniqueCateg.delete(randCateg[i]);
-          } while (uniqueCateg.has(randCateg[i]));
-          uniqueCateg.add(randCateg[i]);
+              uniqueArtists = new Set(randArtists);
+            } while (uniqueArtists.size < randArtists.length);
+          }
         }
 
-        if (flags.every((flag) => flag === true)) {
+        if (flags.every((flag) => flag === true) && (uniqueCateg.size < randCateg.length)) {
+          randCateg = randCateg.map(() => Math.floor(Math.random() * categories.length));
+        }
+
+        if (flags.every((flag) => flag === true) && (uniqueCateg.size === randCateg.length)) {
           break;
         }
       }
     };
-
     if (isDaily) {
       if (localStorage.getItem(`randCateg_${todaySeed}`) !== null && localStorage.getItem(`randArtists_${todaySeed}`) !== null) {
         randCateg = JSON.parse(localStorage.getItem(`randCateg_${todaySeed}`))
@@ -402,6 +394,7 @@ https://rapgrid.vercel.app/gridrap/day`;
     }
   }, [region, currentUserTopArtists]);
 
+  // useEffect for initRows
   useEffect(() => {
     if (artists !== null) {
       const initSeed = isDaily ? todaySeed : '';
@@ -455,33 +448,28 @@ https://rapgrid.vercel.app/gridrap/day`;
               )
           ))}
         </div>
+        <GridFinish
+          lives={lives}
+          setLives={setLives}
+          share={share}
+          todaySeed={todaySeed}
+          isDaily={isDaily}
+          anwsers={anwsers}
+        >
+        </GridFinish>
         {
-          isDaily ?
-            <GridFinish
-              lives={lives}
-              setLives={setLives}
-              share={share}
-              todaySeed={todaySeed}
-              isDaily={isDaily}
-              anwsers={anwsers}
-            >
-            </GridFinish>
+          isPersonal || isDaily
+            ?
+            <></>
             :
-            (
-              isPersonal
-                ?
-                <></>
-                :
-                <GridOptions
-                  inputSeedRef={inputSeedRef}
-                  setSeed={setSeed}
-                  region={region}
-                  setRegion={setRegion}
-                  isCoverChecked={isCoverChecked}
-                  setIsCoverChecked={setIsCoverChecked}
-                ></GridOptions>
-            )
-
+            <GridOptions
+              inputSeedRef={inputSeedRef}
+              setSeed={setSeed}
+              region={region}
+              setRegion={setRegion}
+              isCoverChecked={isCoverChecked}
+              setIsCoverChecked={setIsCoverChecked}
+            ></GridOptions>
         }
       </div>
       <ToastContainer />
