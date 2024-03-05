@@ -4,7 +4,7 @@ import { GlobalContext } from '../../App';
 import { debounce } from '../../utils/debounce';
 import { toast } from 'react-toastify';
 
-export default function GridButtonModal({ divID, todaySeed, setLives, isDaily, artistID, categ, isCoverChecked }) {
+export default function GridButtonModal({ divID, todaySeed, setLives, setCorrectCount, setIsFindGrid, isDaily, artistID, categ, isCoverChecked }) {
   const { sdkGlobal } = useContext(GlobalContext);
 
   const imgRef = useRef(null);
@@ -87,6 +87,11 @@ export default function GridButtonModal({ divID, todaySeed, setLives, isDaily, a
         localStorage.setItem(`result_img_${todaySeed}_${divID}`, album.images[1].url);
         localStorage.setItem(`result_correct_${todaySeed}_all`, parseInt(localStorage.getItem(`result_correct_${todaySeed}_all`)) + 1);
       }
+      setCorrectCount(prev => prev + 1);
+      setIsFindGrid(prevState => ({
+        ...prevState,
+        [divID]: true
+      }));
       toast.success("Bonne réponse !", optionsToast);
     } else {
       if (!checkCol || !checkRow) toast.error("Cet album ne correspond pas !", optionsToast);
@@ -113,12 +118,16 @@ export default function GridButtonModal({ divID, todaySeed, setLives, isDaily, a
       imgRef.current.src = localStorage.getItem(`result_img_${todaySeed}_${divID}`);
       imgRef.current.setAttribute("data-album-id", localStorage.getItem(`result_album_id_${todaySeed}_${divID}`));
       btnRef.current.classList.add("invisible");
+      setIsFindGrid(prevState => ({
+        ...prevState,
+        [divID]: true
+      }));
     } else {
       imgRef.current.classList.add("invisible");
       imgRef.current.src = '';
       btnRef.current.classList.remove("invisible");
     }
-  }, [divID, todaySeed, isDaily]);
+  }, [divID, todaySeed, isDaily, setIsFindGrid]);
 
 
   return (

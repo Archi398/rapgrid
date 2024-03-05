@@ -2,7 +2,7 @@ import React from 'react';
 import { Dropdown } from 'flowbite-react';
 import { GB, FR } from 'country-flag-icons/react/3x2'
 
-export default function GridOptions({ inputSeedRef, setSeed, region, setRegion, isCoverChecked, setIsCoverChecked }) {
+export default function GridOptions({ region, setRegion, isCoverChecked, setIsCoverChecked }) {
 
   const handleCheckboxChange = (event) => {
     setIsCoverChecked(event.target.checked);
@@ -12,18 +12,6 @@ export default function GridOptions({ inputSeedRef, setSeed, region, setRegion, 
     <div className="md:ml-8 md:justify-center mt-8 flex flex-col">
       <h1 className="text-xl text-gray-900 dark:text-white font-bold mb-4">Options :</h1>
       <div>
-        <div className="mb-2">
-          <label htmlFor="input-seed" className="block text-sm font-medium text-gray-900 dark:text-white">
-            Entrez un mot pour jouer avec vos amis :
-          </label>
-          <span className="text-xs text-gray-500">Entrez le même mot pour obtenir la même grille</span>
-        </div>
-        <div className="flex">
-          <input ref={inputSeedRef} type="text" id="input-seed" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required />
-          <button onClick={setSeed} type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 ml-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Recharger</button>
-        </div>
-      </div>
-      <div className="mt-8">
         <label htmlFor="dropdown-country" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choisissez votre région / genre :</label>
         <div className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
           <Dropdown label="Available regions" id="dropdown-country" placement="right-start" >

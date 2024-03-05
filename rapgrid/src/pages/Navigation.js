@@ -107,7 +107,7 @@ export default function Navigation() {
                         <div className="py-1">
                           <NavLink
                             to="/gridrap/personal"
-                            className={`block px-4 py-2 hover:bg-gray-600 ${location.pathname === "/gridrap/personal" ? "text-blue-500" : "text-white"}`}
+                            className={`block text-sm px-4 py-2 hover:bg-gray-600 ${location.pathname === "/gridrap/personal" ? "text-blue-500" : "text-white"}`}
                             onClick={() => { closeMenu(); toggleDropdown(); }}
                           >
                             GridRap personnel

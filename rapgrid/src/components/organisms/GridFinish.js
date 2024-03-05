@@ -1,7 +1,7 @@
 import { Modal } from 'flowbite-react';
 import React, { useEffect, useState, useCallback } from 'react';
 
-export default function GridFinish({ lives, setLives, share, todaySeed, isDaily, anwsers }) {
+export default function GridFinish({ lives, setLives, correctCount, isFindGrid, shareToday, todaySeed, isDaily, anwsers }) {
   const [openModal, setOpenModal] = useState(false);
   const [awnserByID, setAwnserByID] = useState([]);
 
@@ -46,15 +46,15 @@ export default function GridFinish({ lives, setLives, share, todaySeed, isDaily,
                   return (
                     <button
                       key={item}
-                      className={`size-10 md:size-20 rounded-lg hover:brightness-50 ${localStorage.getItem(`result_album_id_${todaySeed}_${item}`) ? "bg-green-500" : "bg-white"}`}
+                      className={`size-10 md:size-20 rounded-lg hover:brightness-50 ${isFindGrid[`${item}`] ? "bg-green-500" : "bg-white"}`}
                       onClick={() => seeAnwsers(item)}
                     ></button>
                   )
                 })}
               </div>
               <div className="flex flex-col justify-center">
-                <h1 className="sm:text-3xl text-xl font-bold	text-center">{lives}/9 Correctes</h1>
-                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg border-gray-600 text-sm w-full sm:w-auto px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={share}>Partager</button>
+                <h1 className="sm:text-3xl text-xl font-bold	text-center">{correctCount}/9 Correctes</h1>
+                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg border-gray-600 text-sm w-full sm:w-auto px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={shareToday}>Partager</button>
               </div>
             </div>
             <div>
