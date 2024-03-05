@@ -40,7 +40,9 @@ export default function Navigation() {
             }
           </div>
           <div className="md:w-1/6 flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse justify-end">
-            <SpotifyConnectButton></SpotifyConnectButton>
+            <div className="hidden md:block">
+              <SpotifyConnectButton />
+            </div>
             <button
               onClick={toggleMenu}
               type="button"
@@ -127,6 +129,9 @@ export default function Navigation() {
                 >
                   Quiz
                 </NavLink>
+              </li>
+              <li className="md:hidden">
+                <SpotifyConnectButton />
               </li>
             </ul>
           </div>
