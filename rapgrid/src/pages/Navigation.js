@@ -70,7 +70,7 @@ export default function Navigation() {
                 <button
                   id="dropdownNavbarLink"
                   data-dropdown-toggle="dropdownNavbar"
-                  className={`flex items-center justify-between w-full py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent ${location.pathname.includes("gridrap") ? "text-blue-500" : "text-white"}`}
+                  className={`flex items-center justify-between w-full py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent ${location.pathname.includes("rapgrid") ? "text-blue-500" : "text-white"}`}
                   onClick={toggleDropdown}
                 >
                   RapGrid
@@ -83,20 +83,20 @@ export default function Navigation() {
                   <ul className="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
                     <li>
                       <NavLink
-                        to="/gridrap/day"
-                        className={`block px-4 py-2 hover:bg-gray-600 ${location.pathname === "/gridrap/day" ? "text-blue-500" : "text-white"}`}
+                        to="/rapgrid/day"
+                        className={`block px-4 py-2 hover:bg-gray-600 ${location.pathname === "/rapgrid/day" ? "text-blue-500" : "text-white"}`}
                         onClick={() => { closeMenu(); toggleDropdown(); }}
                       >
-                        GridRap quotidien
+                        RapGrid quotidien
                       </NavLink>
                     </li>
                     <li>
                       <NavLink
-                        to="/gridrap/sandbox"
-                        className={`block px-4 py-2 hover:bg-gray-600 ${location.pathname === "/gridrap/sandbox" ? "text-blue-500" : "text-white"}`}
+                        to="/rapgrid/sandbox"
+                        className={`block px-4 py-2 hover:bg-gray-600 ${location.pathname === "/rapgrid/sandbox" ? "text-blue-500" : "text-white"}`}
                         onClick={() => { closeMenu(); toggleDropdown(); }}
                       >
-                        Terrain de jeux GridRap
+                        Terrain de jeux RapGrid
                       </NavLink>
                     </li>
                   </ul>
@@ -106,11 +106,11 @@ export default function Navigation() {
                       (
                         <div className="py-1">
                           <NavLink
-                            to="/gridrap/personal"
-                            className={`block text-sm px-4 py-2 hover:bg-gray-600 ${location.pathname === "/gridrap/personal" ? "text-blue-500" : "text-white"}`}
+                            to="/rapgrid/personal"
+                            className={`block text-sm px-4 py-2 hover:bg-gray-600 ${location.pathname === "/rapgrid/personal" ? "text-blue-500" : "text-white"}`}
                             onClick={() => { closeMenu(); toggleDropdown(); }}
                           >
-                            GridRap personnel
+                            RapGrid personnel
                           </NavLink>
                         </div>
                       )

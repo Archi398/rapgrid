@@ -400,7 +400,7 @@ ${gridResult["11"]}${gridResult["12"]}${gridResult["13"]}
 ${gridResult["21"]}${gridResult["22"]}${gridResult["23"]}
 ${gridResult["31"]}${gridResult["32"]}${gridResult["33"]}
 
-https://rapgrid.vercel.app/gridrap/day`;
+https://rapgrid.vercel.app/rapgrid/day`;
 
     try {
       await navigator.clipboard.writeText(textToCopy);
@@ -413,6 +413,14 @@ https://rapgrid.vercel.app/gridrap/day`;
   }
 
   useEffect(() => {
+    setcategCol1({});
+    setcategCol2({});
+    setcategCol3({});
+
+    setartistRow1('');
+    setartistRow2('');
+    setartistRow3('');
+
     if (isPersonal) {
       setArtists(currentUserTopArtists);
     } else {

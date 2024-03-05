@@ -73,10 +73,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigation />}>
             <Route index element={<Home />} />
-            <Route path="/gridrap/day" element={<Grid key="daily" isDaily={true} isPersonal={false} isShared={false} />} />
-            <Route path="/gridrap/sandbox" element={<Grid key="sandbox" isDaily={false} isPersonal={false} isShared={false} />} />
-            <Route path="/gridrap/personal" element={<Grid key="personal" isDaily={false} isPersonal={true} isShared={false} />} />
-            <Route path="/gridrap/shared" element={<Grid key="shared" isDaily={false} isPersonal={false} isShared={true} />} />
+            <Route path="/rapgrid/day" element={<Grid key="daily" isDaily={true} isPersonal={false} isShared={false} />} />
+            <Route path="/rapgrid/sandbox" element={<Grid key="sandbox" isDaily={false} isPersonal={false} isShared={false} />} />
+            <Route path="/rapgrid/personal" element={<Grid key="personal" isDaily={false} isPersonal={true} isShared={false} />} />
+            <Route path="/rapgrid/shared" element={<Grid key="shared" isDaily={false} isPersonal={false} isShared={true} />} />
             <Route path="/quiz/fr" element={<QuizFR />} />
             <Route path="/quiz/fr/secret" element={<QuizFRSecret />} />
           </Route>

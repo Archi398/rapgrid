@@ -20,7 +20,7 @@ export default function GridPersonalOptions({ gridRef }) {
     listArtists.forEach((artist, index) => params.append(`artist${index + 1}`, artist));
     listCategs.forEach((categ, index) => params.append(`categ${index + 1}`, categ));
 
-    const url = `${process.env.REACT_APP_SPOTIFY_REDIRECT_URI}gridrap/shared?${params.toString()}`;
+    const url = `${process.env.REACT_APP_SPOTIFY_REDIRECT_URI}rapgrid/shared?${params.toString()}`;
 
     try {
       await navigator.clipboard.writeText(url);
