@@ -519,7 +519,7 @@ ${linkShare}`;
   }, [artists, artistRow1, artistRow2, artistRow3, categCol1, categCol2, categCol3]);
 
   return (
-    <div className="size-full relative">
+    <div className="relative">
       <GridLoading loading={loading ? '' : 'hidden'}></GridLoading>
       <div className={`flex flex-col ${loading ? 'hidden' : ''}`}>
         <div className="grid grid-cols-4 gap-4 text-white" id="grid" ref={gridRef}>

@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import QuizFR from "./pages/QuizFR";
 import QuizFRSecret from "./pages/QuizFRSecret";
 import Grid from './pages/Grid';
+import ArtistToArtist from './pages/ArtistToArtist';
 
 import { SpotifyApi, AuthorizationCodeWithPKCEStrategy } from '@spotify/web-api-ts-sdk';
 
@@ -77,6 +78,7 @@ function App() {
             <Route path="/rapgrid/sandbox" element={<Grid key="sandbox" isDaily={false} isPersonal={false} isShared={false} />} />
             <Route path="/rapgrid/personal" element={<Grid key="personal" isDaily={false} isPersonal={true} isShared={false} />} />
             <Route path="/rapgrid/shared" element={<Grid key="shared" isDaily={false} isPersonal={false} isShared={true} />} />
+            <Route path="/artisttoartist" element={<ArtistToArtist />} />
             <Route path="/quiz/fr" element={<QuizFR />} />
             <Route path="/quiz/fr/secret" element={<QuizFRSecret />} />
           </Route>
