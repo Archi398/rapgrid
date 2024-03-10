@@ -390,9 +390,38 @@ export default function Grid({ isDaily, isPersonal, isShared }) {
       }
     }
 
-    // const test = Object.values(isFindGrid).filter(Boolean).length;
+    let textTitle = 'Ton résultat';
+    if (isDaily) {
+      textTitle = `Rap grid du ${todaySeed}`;
+    } else if (isPersonal) {
+      textTitle = 'Ton Rapgrid perso';
+    }
 
-    const textToCopy = `Rap grid du ${todaySeed}:
+    let linkShare = 'https://rapgrid.vercel.app/rapgrid/day';
+    if (isDaily) {
+      linkShare = `https://rapgrid.vercel.app/rapgrid/day`;
+    } else if (isPersonal) {
+      const listArtists = [
+        document.getElementById("10").querySelector("span").getAttribute("data-id"),
+        document.getElementById("20").querySelector("span").getAttribute("data-id"),
+        document.getElementById("30").querySelector("span").getAttribute("data-id"),
+      ];
+  
+      const listCategs = [
+        document.getElementById("01").querySelector("span").getAttribute("data-id"),
+        document.getElementById("02").querySelector("span").getAttribute("data-id"),
+        document.getElementById("03").querySelector("span").getAttribute("data-id"),
+      ];
+  
+  
+      const params = new URLSearchParams();
+      listArtists.forEach((artist, index) => params.append(`artist${index + 1}`, artist));
+      listCategs.forEach((categ, index) => params.append(`categ${index + 1}`, categ));
+  
+      linkShare = `${process.env.REACT_APP_SPOTIFY_REDIRECT_URI}rapgrid/shared?${params.toString()}`;
+    }
+
+    const textToCopy = `${textTitle} :
 
 ${correctCount}/9 Correctes
 
@@ -400,7 +429,7 @@ ${gridResult["11"]}${gridResult["12"]}${gridResult["13"]}
 ${gridResult["21"]}${gridResult["22"]}${gridResult["23"]}
 ${gridResult["31"]}${gridResult["32"]}${gridResult["33"]}
 
-https://rapgrid.vercel.app/rapgrid/day`;
+${linkShare}`;
 
     try {
       await navigator.clipboard.writeText(textToCopy);
