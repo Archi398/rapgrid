@@ -103,18 +103,19 @@ export default function ArtistToArtist({ isDaily, isPersonal, isShared }) {
 
   };
 
-  const initShared = useCallback(() => {
+  const initShared = useCallback(async () => {
     const urlParams = new URLSearchParams(window.location.search);
     let params = Object.fromEntries(urlParams.entries());
 
-    const artistFrom = artists.find(artist => artist.id === params.from);
-    const artistTo = artists.find(artist => artist.id === params.to);
+   
+    const artistFrom =  await sdkGlobal.artists.get(params.from);
+    const artistTo =  await sdkGlobal.artists.get(params.to);
 
     setArtistFrom(artistFrom);
     setArtistTo(artistTo);
     setAlbumsList(artistFrom.id);
     setPathingList(prevstate => [...prevstate, artistFrom]);
-  }, [artists, setAlbumsList]);
+  }, [sdkGlobal, setAlbumsList]);
 
   useEffect(() => {
     if (isPersonal) {

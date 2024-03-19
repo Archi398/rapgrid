@@ -85,7 +85,7 @@ ${linkShare}`;
                             <img className={`size-12 rounded-${result.type === "album" ? "full" : "md"} bg-blue-900`} src={result.images[0]?.url || ''} alt={result.name} />
                             <h3 className="ml-2 text-xl font-bold">{result.name}</h3>
                             {
-                              result.type === "album"
+                              result.type === "album" && result.result && result.result.length > 0
                                 ?
                                 <div className="flex flex-col ml-3">
                                   <h3 className="text-base underline">Morceau utilisé pour la liaison :</h3>
