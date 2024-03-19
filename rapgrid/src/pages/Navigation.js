@@ -150,11 +150,11 @@ export default function Navigation() {
                       </NavLink>
                     </li>
                   </ul>
-                  <div className="py-1">
-                    {
-                      currentUserTopArtists != null
-                        ?
-                        (
+                  {
+                    currentUserTopArtists != null
+                      ?
+                      (
+                        <div className="py-1">
                           <NavLink
                             to="/artist-to-artist/personal"
                             className={`block text-sm px-4 py-2 hover:bg-gray-600 ${location.pathname === "/artist-to-artist/personal" ? "text-blue-500" : "text-white"}`}
@@ -162,11 +162,11 @@ export default function Navigation() {
                           >
                             Artist to Artist personnel
                           </NavLink>
-                        )
-                        :
-                        (<></>)
-                    }
-                  </div>
+                        </div>
+                      )
+                      :
+                      (<></>)
+                  }
                 </div>
               </li>
               <li>

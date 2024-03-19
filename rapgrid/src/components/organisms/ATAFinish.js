@@ -17,7 +17,7 @@ export default function ATAFinish({ isDaily, artistFrom, artistTo, pathingList }
 
   async function share() {
 
-    let textTitle = `Voici mon résultat`;
+    let textTitle = `Voici mon résultat du Artist to Artist`;
     if (isDaily) {
       textTitle = `Artist to Artist du ${todaySeed}`;
     }
@@ -88,11 +88,11 @@ ${linkShare}`;
                               result.type === "album" && result.result && result.result.length > 0
                                 ?
                                 <div className="flex flex-col ml-3">
-                                  <h3 className="text-base underline">Morceau utilisé pour la liaison :</h3>
+                                  <h3 className="text-base underline">Morceau{result.result.length > 1 ? "x" : ""} utilisé pour la liaison :</h3>
                                   <ul>
                                     {
                                       result.result.map((track, index) => (
-                                        <li key={index} className="text-sm text-green-500">{track.name}</li>
+                                        <li key={index} className="text-sm text-green-500">- {track.name}</li>
                                       ))
                                     }
                                   </ul>
