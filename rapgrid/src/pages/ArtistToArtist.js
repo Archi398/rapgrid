@@ -36,11 +36,24 @@ export default function ArtistToArtist({ isDaily, isPersonal, isShared }) {
     return Array.from(randomIndices);
   };
 
+  function chunkArray(array, chunkSize) {
+    const results = [];
+    while (array.length) {
+      results.push(array.splice(0, chunkSize));
+    }
+    return results;
+  }
+
   const setAlbumsList = useCallback(async (id) => {
     try {
       setLoading(true);
-      const albums = await sdkGlobal.artists.albums(id, "album", "", 50);
-      setCurrentList(albums.items);
+      const artistsAlbums = await sdkGlobal.artists.albums(id, "album", "", 50);
+      const listIds = artistsAlbums.items.map(album => album.id);
+      const chunkedIds = chunkArray(listIds, 20);
+      for (const ids of chunkedIds) {
+        const albums = await sdkGlobal.albums.get(ids);
+        setCurrentList(prevstate => [...prevstate, ...albums]);
+      }
     } catch (error) {
       console.error('Error fetching search results:', error);
     } finally {

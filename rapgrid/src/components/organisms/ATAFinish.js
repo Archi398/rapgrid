@@ -46,11 +46,22 @@ ${linkShare}`;
   useEffect(() => {
     if (artistTo !== null && pathingList.length > 0) {
       if (artistTo.id === pathingList[pathingList.length - 1].id) {
+        pathingList.forEach((element, index) => {
+          if (element.type === "album") {
+            element.result = [];
+            element.tracks.items.forEach(track => {
+              if (track.artists.some(artist => artist.id === pathingList[index + 1].id)) {
+                pathingList[index].result.push(track);
+              }
+            });
+          }
+        });
         setOpenModal(true);
       }
     }
-    //setOpenModal(true);
   }, [artistTo, pathingList]);
+
+
 
   return (
     <div className="flex justify-around	mt-8">
@@ -62,7 +73,7 @@ ${linkShare}`;
               artistFrom={artistFrom}
               artistTo={artistTo}
             />
-            <hr className="mb-4"/>
+            <hr className="mb-4" />
             <div className="flex justify-between items-start	">
               <div>
                 {pathingList.length > 0 && (
@@ -73,6 +84,23 @@ ${linkShare}`;
                           <div className="flex items-center">
                             <img className={`size-12 rounded-${result.type === "album" ? "full" : "md"} bg-blue-900`} src={result.images[0]?.url || ''} alt={result.name} />
                             <h3 className="ml-2 text-xl font-bold">{result.name}</h3>
+                            {
+                              result.type === "album"
+                                ?
+                                <div className="flex flex-col ml-3">
+                                  <h3 className="text-base underline">Morceau utilisé pour la liaison :</h3>
+                                  <ul>
+                                    {
+                                      result.result.map((track, index) => (
+                                        <li key={index} className="text-sm text-green-500">{track.name}</li>
+                                      ))
+                                    }
+                                  </ul>
+                                </div>
+                                :
+                                null
+                            }
+
                           </div>
                           <div className="ml-3">
                             {
