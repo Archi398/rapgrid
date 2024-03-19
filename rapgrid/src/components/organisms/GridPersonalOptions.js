@@ -1,8 +1,12 @@
-export default function GridPersonalOptions({ gridRef }) {
+import { toast } from 'react-toastify';
 
-  async function generateShareLink(event) {
-    const currentElement = event.target;
+export default function GridPersonalOptions() {
+  const optionsToast = {
+    theme: "dark",
+    autoClose: 2500,
+  };
 
+  async function generateShareLink() {
     const listArtists = [
       document.getElementById("10").querySelector("span").getAttribute("data-id"),
       document.getElementById("20").querySelector("span").getAttribute("data-id"),
@@ -20,11 +24,11 @@ export default function GridPersonalOptions({ gridRef }) {
     listArtists.forEach((artist, index) => params.append(`artist${index + 1}`, artist));
     listCategs.forEach((categ, index) => params.append(`categ${index + 1}`, categ));
 
-    const url = `${process.env.REACT_APP_SPOTIFY_REDIRECT_URI}rapgrid/shared?${params.toString()}`;
+    const url = `${process.env.REACT_APP_BASE_URL}/rapgrid/shared?${params.toString()}`;
 
     try {
       await navigator.clipboard.writeText(url);
-      currentElement.innerHTML = "Lien copié !";
+      toast.success("Lien copié dans le presse-papier !", optionsToast);
       return true;
     } catch (error) {
       console.error('Error copying text to clipboard:', error);

@@ -4,8 +4,8 @@ import { GlobalContext } from '../../App';
 import { debounce } from '../../utils/debounce';
 import { toast } from 'react-toastify';
 
-export default function GridButtonModal({ divID, todaySeed, setLives, setCorrectCount, setIsFindGrid, isDaily, artistID, categ, isCoverChecked }) {
-  const { sdkGlobal } = useContext(GlobalContext);
+export default function GridButtonModal({ divID, setLives, setCorrectCount, setIsFindGrid, isDaily, artistID, categ, isCoverChecked }) {
+  const { sdkGlobal, todaySeed } = useContext(GlobalContext);
 
   const imgRef = useRef(null);
   const btnRef = useRef(null);

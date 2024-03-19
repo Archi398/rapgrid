@@ -1,7 +1,7 @@
 import '../style/Grid.css';
 import { useEffect, useRef, useMemo, useCallback, useState, useContext } from 'react';
 import seedrandom from 'seedrandom';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import GridButtonModal from '../components/molecules/GridButtonModal';
@@ -14,9 +14,9 @@ import { artistWorld, artistUK, artistFR, artistRockWorld } from '../data/grid/a
 import { GlobalContext } from "../App";
 
 export default function Grid({ isDaily, isPersonal, isShared }) {
+  const { sdkGlobal, currentUserTopArtists, todaySeed } = useContext(GlobalContext);
+
   // if daily grid
-  const today = new Date();
-  const todaySeed = ((today.getDate() < 10) ? ("0" + today.getDate()) : today.getDate()) + '/' + ((today.getMonth() + 1 < 10) ? ("0" + (today.getMonth() + 1)) : (today.getMonth() + 1)) + '/' + today.getFullYear();
   if (!localStorage.getItem(`lives_${todaySeed}`)) {
     localStorage.setItem(`lives_${todaySeed}`, 11)
   }
@@ -30,7 +30,10 @@ export default function Grid({ isDaily, isPersonal, isShared }) {
     seedrandom(todaySeed, { global: true });
   }
 
-  const { sdkGlobal, currentUserTopArtists } = useContext(GlobalContext);
+  const optionsToast = {
+    theme: "dark",
+    autoClose: 2500,
+  };
 
   const categories = useMemo(() => [
     {
@@ -380,9 +383,7 @@ export default function Grid({ isDaily, isPersonal, isShared }) {
     }
   };
 
-  async function shareToday(event) {
-    const currentElement = event.target;
-
+  async function shareToday() {
     const gridResult = {};
     for (let i = 1; i <= 3; i++) {
       for (let j = 1; j <= 3; j++) {
@@ -406,19 +407,19 @@ export default function Grid({ isDaily, isPersonal, isShared }) {
         document.getElementById("20").querySelector("span").getAttribute("data-id"),
         document.getElementById("30").querySelector("span").getAttribute("data-id"),
       ];
-  
+
       const listCategs = [
         document.getElementById("01").querySelector("span").getAttribute("data-id"),
         document.getElementById("02").querySelector("span").getAttribute("data-id"),
         document.getElementById("03").querySelector("span").getAttribute("data-id"),
       ];
-  
-  
+
+
       const params = new URLSearchParams();
       listArtists.forEach((artist, index) => params.append(`artist${index + 1}`, artist));
       listCategs.forEach((categ, index) => params.append(`categ${index + 1}`, categ));
-  
-      linkShare = `${process.env.REACT_APP_SPOTIFY_REDIRECT_URI}rapgrid/shared?${params.toString()}`;
+
+      linkShare = `${process.env.REACT_APP_BASE_URL}/rapgrid/shared?${params.toString()}`;
     }
 
     const textToCopy = `${textTitle} :
@@ -433,7 +434,7 @@ ${linkShare}`;
 
     try {
       await navigator.clipboard.writeText(textToCopy);
-      currentElement.innerHTML = "Copié !";
+      toast.success("Copié dans le presse-papier !", optionsToast);
       return true;
     } catch (error) {
       console.error('Error copying text to clipboard:', error);
@@ -528,7 +529,6 @@ ${linkShare}`;
               <div className={classlist} id={divID} key={divID}>
                 <GridButtonModal
                   divID={divID}
-                  todaySeed={todaySeed}
                   setLives={setLives}
                   setCorrectCount={setCorrectCount}
                   setIsFindGrid={setIsFindGrid}
@@ -547,9 +547,7 @@ ${linkShare}`;
         {
           isPersonal
             ?
-            <GridPersonalOptions
-              gridRef={gridRef}
-            ></GridPersonalOptions>
+            <GridPersonalOptions />
             :
             <></>
         }
@@ -559,7 +557,6 @@ ${linkShare}`;
           correctCount={correctCount}
           isFindGrid={isFindGrid}
           shareToday={shareToday}
-          todaySeed={todaySeed}
           isDaily={isDaily}
           anwsers={anwsers}
         ></GridFinish>

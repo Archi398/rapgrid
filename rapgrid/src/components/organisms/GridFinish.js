@@ -1,7 +1,9 @@
 import { Modal } from 'flowbite-react';
-import React, { useEffect, useState, useCallback } from 'react';
+import { GlobalContext } from '../../App';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 
-export default function GridFinish({ lives, setLives, correctCount, isFindGrid, shareToday, todaySeed, isDaily, anwsers }) {
+export default function GridFinish({ lives, setLives, correctCount, isFindGrid, shareToday, isDaily, anwsers }) {
+  const { todaySeed } = useContext(GlobalContext);
   const [openModal, setOpenModal] = useState(false);
   const [awnserByID, setAwnserByID] = useState([]);
 

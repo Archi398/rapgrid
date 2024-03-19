@@ -9,7 +9,6 @@ export default function Navigation() {
   const { currentUserProfile, currentUserTopArtists } = useContext(GlobalContext);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -17,10 +16,6 @@ export default function Navigation() {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
-  };
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
@@ -73,7 +68,6 @@ export default function Navigation() {
                   id="dropdownNavbarLink"
                   data-dropdown-toggle="dropdownNavbar"
                   className={`flex items-center justify-between w-full py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent ${location.pathname.includes("rapgrid") ? "text-blue-500" : "text-white"}`}
-                  onClick={toggleDropdown}
                 >
                   RapGrid
                   <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -81,13 +75,13 @@ export default function Navigation() {
                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
                   </svg></button>
                 <div id="dropdownNavbar"
-                  className={`z-10 font-normal bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 divide-y divide-gray-600 ${isDropdownOpen ? 'absolute' : 'hidden'}`}>
-                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-400" aria-labelledby="dropdownLargeButton">
+                  className="z-10 hidden font-normal bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 divide-y divide-gray-600">
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-400">
                     <li>
                       <NavLink
                         to="/rapgrid/day"
                         className={`block px-4 py-2 hover:bg-gray-600 ${location.pathname === "/rapgrid/day" ? "text-blue-500" : "text-white"}`}
-                        onClick={() => { closeMenu(); toggleDropdown(); }}
+                        onClick={() => { closeMenu(); }}
                       >
                         RapGrid quotidien
                       </NavLink>
@@ -96,7 +90,7 @@ export default function Navigation() {
                       <NavLink
                         to="/rapgrid/sandbox"
                         className={`block px-4 py-2 hover:bg-gray-600 ${location.pathname === "/rapgrid/sandbox" ? "text-blue-500" : "text-white"}`}
-                        onClick={() => { closeMenu(); toggleDropdown(); }}
+                        onClick={() => { closeMenu(); }}
                       >
                         Terrain de jeux RapGrid
                       </NavLink>
@@ -110,7 +104,7 @@ export default function Navigation() {
                           <NavLink
                             to="/rapgrid/personal"
                             className={`block text-sm px-4 py-2 hover:bg-gray-600 ${location.pathname === "/rapgrid/personal" ? "text-blue-500" : "text-white"}`}
-                            onClick={() => { closeMenu(); toggleDropdown(); }}
+                            onClick={() => { closeMenu(); }}
                           >
                             RapGrid personnel
                           </NavLink>
@@ -122,13 +116,58 @@ export default function Navigation() {
                 </div>
               </li>
               <li>
-                <NavLink
-                  to="/artisttoartist"
-                  className={`block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${location.pathname === "/artisttoartist" ? "text-blue-500" : "text-white"}`}
-                  onClick={closeMenu}
+                <button
+                  id="dropdownNavbarLinkATA"
+                  data-dropdown-toggle="dropdownNavbarATA"
+                  className={`flex items-center justify-between w-full py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent ${location.pathname.includes("artist-to-artist") ? "text-blue-500" : "text-white"}`}
                 >
                   Artist to Artist
-                </NavLink>
+                  <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
+                  </svg>
+                </button>
+                <div
+                  id="dropdownNavbarATA"
+                  className="z-10 hidden font-normal bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 divide-y divide-gray-600"
+                >
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-400">
+                    <li>
+                      <NavLink
+                        to="/artist-to-artist/day"
+                        className={`block px-4 py-2 hover:bg-gray-600 ${location.pathname === "/artist-to-artist/day" ? "text-blue-500" : "text-white"}`}
+                        onClick={() => { closeMenu(); }}
+                      >
+                        Artist to Artist quotidien
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        to="/artist-to-artist/sandbox"
+                        className={`block px-4 py-2 hover:bg-gray-600 ${location.pathname === "/artist-to-artist/sandbox" ? "text-blue-500" : "text-white"}`}
+                        onClick={() => { closeMenu(); }}
+                      >
+                        Terrain de jeux Artist to Artist
+                      </NavLink>
+                    </li>
+                  </ul>
+                  <div className="py-1">
+                    {
+                      currentUserTopArtists != null
+                        ?
+                        (
+                          <NavLink
+                            to="/artist-to-artist/personal"
+                            className={`block text-sm px-4 py-2 hover:bg-gray-600 ${location.pathname === "/artist-to-artist/personal" ? "text-blue-500" : "text-white"}`}
+                            onClick={() => { closeMenu(); }}
+                          >
+                            Artist to Artist personnel
+                          </NavLink>
+                        )
+                        :
+                        (<></>)
+                    }
+                  </div>
+                </div>
               </li>
               <li>
                 <NavLink

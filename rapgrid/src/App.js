@@ -23,6 +23,10 @@ function App() {
     localStorage.removeItem("spotify-sdk:verifier");
   }
 
+  //daily 
+  const today = new Date();
+  const todaySeed = ((today.getDate() < 10) ? ("0" + today.getDate()) : today.getDate()) + '/' + ((today.getMonth() + 1 < 10) ? ("0" + (today.getMonth() + 1)) : (today.getMonth() + 1)) + '/' + today.getFullYear();
+
   const spotifyConnectUser = async () => {
     const auth = new AuthorizationCodeWithPKCEStrategy(
       process.env.REACT_APP_SPOTIFY_CLIENT_ID,
@@ -69,7 +73,7 @@ function App() {
   }, [setSdkGlobal]);
 
   return sdkGlobal ? (
-    <GlobalContext.Provider value={{ sdkGlobal, currentUserProfile, currentUserTopArtists, logoutSpotifyUser, spotifyConnectUser,  }}>
+    <GlobalContext.Provider value={{ sdkGlobal, currentUserProfile, currentUserTopArtists, logoutSpotifyUser, spotifyConnectUser, todaySeed }}>
       <div className="py-24 w-full h-full max-w-screen-xl flex flex-wrap items-center justify-center mx-auto">
         <Routes>
           <Route path="/" element={<Navigation />}>
@@ -78,7 +82,10 @@ function App() {
             <Route path="/rapgrid/sandbox" element={<Grid key="sandbox" isDaily={false} isPersonal={false} isShared={false} />} />
             <Route path="/rapgrid/personal" element={<Grid key="personal" isDaily={false} isPersonal={true} isShared={false} />} />
             <Route path="/rapgrid/shared" element={<Grid key="shared" isDaily={false} isPersonal={false} isShared={true} />} />
-            <Route path="/artisttoartist" element={<ArtistToArtist />} />
+            <Route path="/artist-to-artist/day" element={<ArtistToArtist key="daily" isDaily={true} isPersonal={false} isShared={false} />} />
+            <Route path="/artist-to-artist/sandbox" element={<ArtistToArtist key="sandbox" isDaily={false} isPersonal={false} isShared={false} />} />
+            <Route path="/artist-to-artist/personal" element={<ArtistToArtist key="personal" isDaily={false} isPersonal={true} isShared={false} />} />
+            <Route path="/artist-to-artist/shared" element={<ArtistToArtist key="shared" isDaily={false} isPersonal={false} isShared={true} />} />
             <Route path="/quiz/fr" element={<QuizFR />} />
             <Route path="/quiz/fr/secret" element={<QuizFRSecret />} />
           </Route>
