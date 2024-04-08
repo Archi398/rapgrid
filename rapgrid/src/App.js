@@ -8,6 +8,7 @@ import QuizFR from "./pages/QuizFR";
 import QuizFRSecret from "./pages/QuizFRSecret";
 import Grid from './pages/Grid';
 import ArtistToArtist from './pages/ArtistToArtist';
+import RelatedTo from './pages/RelatedTo';
 
 import { SpotifyApi, AuthorizationCodeWithPKCEStrategy } from '@spotify/web-api-ts-sdk';
 
@@ -64,6 +65,24 @@ function App() {
     window.location.reload();
   }
 
+  function generateRoutes(path, Component) {
+    const types = ['day', 'sandbox', 'personal', 'shared'];
+    return types.map(type => (
+      <Route
+        key={`${path}-${type}`}
+        path={`/${path}/${type}`}
+        element={
+          <Component
+            key={`${path}-${type}-component`}
+            isDaily={type === 'day'}
+            isPersonal={type === 'personal'}
+            isShared={type === 'shared'}
+          />
+        }
+      />
+    ));
+  }
+
   useEffect(() => {
     if (localStorage.getItem("spotify-sdk:AuthorizationCodeWithPKCEStrategy:token") || localStorage.getItem("spotify-sdk:verifier")) {
       spotifyConnectUser();
@@ -78,14 +97,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigation />}>
             <Route index element={<Home />} />
-            <Route path="/rapgrid/day" element={<Grid key="daily" isDaily={true} isPersonal={false} isShared={false} />} />
-            <Route path="/rapgrid/sandbox" element={<Grid key="sandbox" isDaily={false} isPersonal={false} isShared={false} />} />
-            <Route path="/rapgrid/personal" element={<Grid key="personal" isDaily={false} isPersonal={true} isShared={false} />} />
-            <Route path="/rapgrid/shared" element={<Grid key="shared" isDaily={false} isPersonal={false} isShared={true} />} />
-            <Route path="/artist-to-artist/day" element={<ArtistToArtist key="daily" isDaily={true} isPersonal={false} isShared={false} />} />
-            <Route path="/artist-to-artist/sandbox" element={<ArtistToArtist key="sandbox" isDaily={false} isPersonal={false} isShared={false} />} />
-            <Route path="/artist-to-artist/personal" element={<ArtistToArtist key="personal" isDaily={false} isPersonal={true} isShared={false} />} />
-            <Route path="/artist-to-artist/shared" element={<ArtistToArtist key="shared" isDaily={false} isPersonal={false} isShared={true} />} />
+            {generateRoutes('grid', Grid)}
+            {generateRoutes('artist-to-artist', ArtistToArtist)}
+            {generateRoutes('related-to', RelatedTo)}
             <Route path="/quiz/fr" element={<QuizFR />} />
             <Route path="/quiz/fr/secret" element={<QuizFRSecret />} />
           </Route>

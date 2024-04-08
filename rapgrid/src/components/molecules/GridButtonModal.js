@@ -42,7 +42,10 @@ export default function GridButtonModal({ divID, setLives, setCorrectCount, setI
     }
   };
 
-  const debouncedFetchSearchResults = debounce(fetchSearchResults, 250);
+  const debouncedFetchSearchResults = useCallback(
+    debounce((term) => fetchSearchResults(term), 250),
+    []
+  );
 
   const handleInputChange = useCallback((event) => {
     const term = event.target.value;
@@ -52,6 +55,7 @@ export default function GridButtonModal({ divID, setLives, setCorrectCount, setI
       debouncedFetchSearchResults(term);
     } else {
       setSearchResults([]);
+      setLoading(false);
     }
   }, [setLoading, setSearchTerm, setSearchResults, debouncedFetchSearchResults]);
 

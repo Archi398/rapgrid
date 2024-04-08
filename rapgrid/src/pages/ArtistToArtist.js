@@ -120,7 +120,7 @@ export default function ArtistToArtist({ isDaily, isPersonal, isShared }) {
   useEffect(() => {
     if (isPersonal) {
       if (currentUserTopArtists) {
-        setArtists(currentUserTopArtists.filter((artist) => artist.followers.total > 3000000));
+        setArtists(currentUserTopArtists);
       }
     } else {
       if (!artists) {

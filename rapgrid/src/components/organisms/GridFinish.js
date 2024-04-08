@@ -68,8 +68,8 @@ export default function GridFinish({ lives, setLives, correctCount, isFindGrid, 
                       <div className="flex items-center">
                         <img className="h-10 max-w-lg rounded-lg mr-2" src={answer.img} alt={answer.name} />
                         <div className="flex flex-col">
-                          <span className="font-bold">Nom : {answer.name}</span>
-                          <span className="text-xs">Date : {answer.date}</span>
+                          <span className="font-bold">{answer.name}</span>
+                          <span className="text-xs">{answer.date}</span>
                         </div>
                       </div>
                     </li>
